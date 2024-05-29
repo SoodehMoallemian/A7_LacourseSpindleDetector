@@ -1,3 +1,4 @@
+% function DEF_a7 = SM_init_DEF_hd(sub_id,source_path)
 % initA7_DEF initiates all basic parameters required to run a7 detectors
 %  Purpose :
 %       paths, input and output definition
@@ -13,19 +14,34 @@
 %
 % Author: Jacques Delfrate
 % Date : 2018-02-13
+% Modified by: Soodeh Moallemian, PhD.
+% Brain Health and Allience, CMBN, Rutgers University
+% s.moallemian@rutgers.edu
+% Date : 2024-04-23
+
 
 clear variables;
 clc;
 
+sub_id = 'COV209';
+source_path = fullfile('/Users/smoallemian/Desktop/Dreem_study/data');
+sub_fold = fullfile(source_path,sub_id);
+cd(sub_fold)
+
+if ~exist(fullfile(sub_fold,'Spindles')) %#ok<EXIST> 
+    mkdir(sub_fold, 'Spindles'); 
+end
+
+FolderName = fullfile(sub_fold,'Spindles');
  % Path
     % Define inputs directory
-    DEF_a7.inputPath            = './input/';                % input path directory
+    DEF_a7.inputPath            = FolderName;                % input path directory
     % Define inputs files in the input directory
-    DEF_a7.EEGvector            = 'EEGvector.mat';           % input eeg vector name
-    DEF_a7.sleepStaging         = 'sleepStaging.mat';        % input sleep stages vector name
-    DEF_a7.artifactVector       = 'artifactVector.mat';      % input artifact vector name
+    DEF_a7.EEGvector            = strcat(sub_id, '_SnippedSleep_filtered_bandpass_n2n3_noarousals_fftstep_artifcorr_final_interp_alicecorrected.set');           % input eeg vector name
+    DEF_a7.sleepStaging         = strcat(sub_id, '_N2N3_stagenames_afterfft_snipped.mat');        % input sleep stages vector name
+    DEF_a7.artifactVector       = false(1, length(DEF_a7.EEGvector));      % input artifact vector name
     % Define outputs
-    DEF_a7.outputGrandParentDir = './output/';               % output path
+    DEF_a7.outputGrandParentDir = DEF_a7.inputPath;               % output path
     DEF_a7.outputTxtFile        = 'EventDetection.txt';      % Summury of detection
     DEF_a7.outputTS             = 'detectionInfo.mat';       % detection info output file name
     DEF_a7.outputDetectInfo     = 'detectionVector.mat';     % TS output file name
@@ -34,7 +50,7 @@ clc;
     
  % A7 default parameters
     % Sampling rate of the eeg vector.
-    DEF_a7.standard_sampleRate = 100;
+    DEF_a7.standard_sampleRate = 250;
     
     % Sleep stage considered in the baseline.  
     % Set to {'N2', 'N3'} to consider stage N2 and N3  as baseline, 
@@ -42,7 +58,7 @@ clc;
     % Note that the stage units must match what is found in the
     % sleepStaging input file (sleepStaging.mat) 
     % (ie use '2', or 'N2' if 2 or N2 is used in the input sleep staging etc.)
-    DEF_a7.bslSleepStaging = ['N2']; % or {'N2'}
+    DEF_a7.bslSleepStaging = {'N2','N3'}; % or {'N2'}
     
     % DEF_a7.inContOn=0 (off): the context classifier is by passed 
     % DEF_a7.inContOn=1 (on): the context classifier is run and all the
@@ -63,4 +79,8 @@ clc;
     
     % Print in the command window the option definition 
     DEF_a7
+
+    cd(FolderName)
+    save('DEF_a7.mat','DEF_a7')
+% end
 

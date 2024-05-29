@@ -48,7 +48,7 @@
 %  RELEASE : v1.1 with MATLAB 9.1.0.441655 (R2016b)
 %            Note that this code may not run on previous versions of MATLAB.  
 %            For example, it does not work with R2012a due to changes to 'omitnan' flags for math functions (ie sum).
-%
+
 %-------------------------------------------------------------------------
 % 
 % REMARKS :
@@ -62,7 +62,11 @@
 %
 %
 %-------------------------------------------------------------------------
-
+%-------------------------------------------------------------------------
+% Modified by Soodeh Moallemian. Phd. Brain Health Alliance, CMBN, Ritgers University
+% Modifier NOTE: the modifications are done based on the DREEM3 data.
+% s.moallemian@rutgers.edu
+% Date: 2024-05-23
 %% a7 inits
 % A7 features and path init
 initA7_DEF;
