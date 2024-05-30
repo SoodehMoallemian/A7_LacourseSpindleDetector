@@ -63,10 +63,12 @@
 %
 %-------------------------------------------------------------------------
 %-------------------------------------------------------------------------
-% Modified by Soodeh Moallemian. Phd. Brain Health Alliance, CMBN, Ritgers University
+% Modified by Soodeh Moallemian. PhD. Brain Health Alliance, CMBN, Ritgers University
 % Modifier NOTE: the modifications are done based on the DREEM3 data.
 % s.moallemian@rutgers.edu
-% Date: 2024-05-23
+% Date: 2024-05-29
+%-------------------------------------------------------------------------
+
 %% a7 inits
 % A7 features and path init
 initA7_DEF;

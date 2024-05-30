@@ -14,17 +14,19 @@
 %
 % Author: Jacques Delfrate
 % Date : 2018-02-13
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Modified by: Soodeh Moallemian, PhD.
 % Brain Health and Allience, CMBN, Rutgers University
 % s.moallemian@rutgers.edu
 % Date : 2024-04-23
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 clear variables;
 clc;
 
 sub_id = 'COV209';
-source_path = fullfile('/Users/smoallemian/Desktop/Dreem_study/data');
+source_path = fullfile('D:\Studies\01_DREEM3\02_RawData');
 sub_fold = fullfile(source_path,sub_id);
 cd(sub_fold)
 
@@ -32,10 +34,10 @@ if ~exist(fullfile(sub_fold,'Spindles')) %#ok<EXIST>
     mkdir(sub_fold, 'Spindles'); 
 end
 
-FolderName = fullfile(sub_fold,'Spindles');
+SpindleFolder = fullfile(sub_fold,'Spindles');
  % Path
     % Define inputs directory
-    DEF_a7.inputPath            = FolderName;                % input path directory
+    DEF_a7.inputPath            = SpindleFolder;                % input path directory
     % Define inputs files in the input directory
     DEF_a7.EEGvector            = strcat(sub_id, '_SnippedSleep_filtered_bandpass_n2n3_noarousals_fftstep_artifcorr_final_interp_alicecorrected.set');           % input eeg vector name
     DEF_a7.sleepStaging         = strcat(sub_id, '_N2N3_stagenames_afterfft_snipped.mat');        % input sleep stages vector name
