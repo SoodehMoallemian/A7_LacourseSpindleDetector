@@ -37,11 +37,11 @@ end
 SpindleFolder = fullfile(sub_fold,'Spindles');
  % Path
     % Define inputs directory
-    DEF_a7.inputPath            = SpindleFolder;                % input path directory
+    DEF_a7.inputPath            = sub_fold;                % input path directory
     % Define inputs files in the input directory
-    DEF_a7.EEGvector            = strcat(sub_id, '_SnippedSleep_filtered_bandpass_n2n3_noarousals_fftstep_artifcorr_final_interp_alicecorrected.set');           % input eeg vector name
+    DEF_a7.EEGvector            = strcat(sub_id, '_SnippedSleep_filtered_bandpass_n2n3_noarousals_fftstep_artifcorr_final.set');           % input eeg vector name
     DEF_a7.sleepStaging         = strcat(sub_id, '_N2N3_stagenames_afterfft_snipped.mat');        % input sleep stages vector name
-    DEF_a7.artifactVector       = false(1, length(DEF_a7.EEGvector));      % input artifact vector name
+    DEF_a7.artifactVector       = artifactVect;      % input artifact vector name
     % Define outputs
     DEF_a7.outputGrandParentDir = DEF_a7.inputPath;               % output path
     DEF_a7.outputTxtFile        = 'EventDetection.txt';      % Summury of detection
@@ -82,7 +82,7 @@ SpindleFolder = fullfile(sub_fold,'Spindles');
     % Print in the command window the option definition 
     DEF_a7
 
-    cd(FolderName)
+    cd(SpindleFolder)
     save('DEF_a7.mat','DEF_a7')
 % end
 

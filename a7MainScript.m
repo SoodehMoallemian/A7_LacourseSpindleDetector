@@ -64,7 +64,7 @@
 %-------------------------------------------------------------------------
 %-------------------------------------------------------------------------
 % Modified by Soodeh Moallemian. PhD. Brain Health Alliance, CMBN, Ritgers University
-% Modifier NOTE: the modifications are done based on the DREEM3 data.
+% NOTE: the modifications are done based on the DREEM3 data.
 % s.moallemian@rutgers.edu
 % Date: 2024-05-29
 %-------------------------------------------------------------------------
@@ -142,7 +142,7 @@ initA7_DEF;
     
 %% Other inits description 
     % output date
-    DEF_a7.date = datestr(now,'yyyymmdd_HHMMSS');
+    DEF_a7.date = datestr(now,'yyyy-mm-dd_HH:MM:SS');
     % add libraries to path
     addpath(genpath('./lib'));
     
@@ -153,57 +153,47 @@ fprintf('Data is loading...\n');
 % Section 1.1 Load a EEG signal to run the detector
 %--------------------------------------------------------------------------
 % Load the eeg timeseries c3 filtered 0-30 Hz 
-    eeg_C3A2 = load([DEF_a7.inputPath, DEF_a7.EEGvector]); % by-sample
-    eeg_C3A2 = eeg_C3A2.dataVector;
+    EEG = pop_loadset(fullfile(DEF_a7.inputPath, DEF_a7.EEGvector));
+    eeg_C3A2 = EEG.data; % by-sample
+    % eeg_C3A2 = eeg_C3A2.dataVector;
     
 %--------------------------------------------------------------------------
 % Section 1.2 Load the sleep staging
 %--------------------------------------------------------------------------
-    sleepStageVect = load([DEF_a7.inputPath, DEF_a7.sleepStaging]); % by-sample
-    sleepStageVect = sleepStageVect.sleepStageVect;
+    sleepStageVect = load(fullfile(sub_fold,DEF_a7.sleepStaging)); % by-sample
+    sleepStageVect = sleepStageVect.N2N3_stages_afterfft_snipped;
     
 %--------------------------------------------------------------------------
 % Section 1.3 Load the artifact vector
 %-------------------------------------------------------------------------- 
     % NREM 2 artifact free recording has been selected as the example data
     % (0 : No artifact / 1: artifact)
-    artifactVect = load([DEF_a7.inputPath, DEF_a7.artifactVector]); % by-sample
-    artifactVect = artifactVect.artifactVect;
+    
+    DEF_a7.artifactVector = false(1, length(EEG.data));
+    artifactVect = DEF_a7.artifactVector; % by-sample
+    % artifactVect = artifactVect.artifactVect;
 
 %--------------------------------------------------------------------------
 % Section 2.1 Detect spindles in the signal
 %--------------------------------------------------------------------------
     % make sure all input vectors are the same size
-    if isequal(length(artifactVect),length(eeg_C3A2),length(sleepStageVect))
-        [detVect, detInfoTS, NREMClass, outputFile] = ...
-            a7SpindleDetection(eeg_C3A2, sleepStageVect, ...
-            artifactVect, DEF_a7);
-    else
-        % error, check input vector
-        error('input vectors should be same size, check input vectors');
+    %loop over the 5 electrodes for DREEM3
+    % the electrode names
+    electrode_names = {'F7-O1', 'F8-O2', 'F8-F7', 'F8-O1', 'F7-O2'};
+    time = datestr(now,'yyyy-mm-dd_HH-MM-SS');
+    for elect_i =1: 5
+        elect_TimeSeries= double(eeg_C3A2(elect_i,:));
+        elect_name = char(electrode_names(elect_i));
+        if isequal(length(artifactVect),length(eeg_C3A2),length(sleepStageVect))
+            [detVect, detInfoTS, NREMClass, outputFile] = ...
+                a7SpindleDetection(elect_TimeSeries, sleepStageVect, ...
+                artifactVect, DEF_a7);
+        else
+            % error, check input vector
+            error('input vectors should be same size, check input vectors');
+        end
+        save_a7out(DEF_a7, detInfoTS,detVect, NREMClass,outputFile,time,elect_name)
     end
-        
-
-%% End Script
-%--------------------------------------------------------------------------
-% Section 3.1 Save output 
-%--------------------------------------------------------------------------
-    % Contain detection information in time series
-    save([DEF_a7.outputGrandParentDir, DEF_a7.date, '_', ...
-        DEF_a7.outputTS], 'detInfoTS');
-    % Contain the detection in sample
-    save([DEF_a7.outputGrandParentDir, DEF_a7.date, '_', ...
-        DEF_a7.outputDetectInfo], 'detVect');
-    % Contain detection in events 
-    % 0/1: Not/Is in spectral context
-    save([DEF_a7.outputGrandParentDir, DEF_a7.date, '_', ...
-        DEF_a7.outputNREMClass], 'NREMClass');
-    % save DEF_a7 structure to keep track of settings
-    save([DEF_a7.outputGrandParentDir, DEF_a7.date, '_', ...
-        DEF_a7.detectorDef], 'DEF_a7');
-    % save event file
-    cell2tab([DEF_a7.outputGrandParentDir, DEF_a7.date, '_', ...
-        DEF_a7.outputTxtFile], outputFile, 'w');
 
 %--------------------------------------------------------------------------
 % remove path from Matlab        

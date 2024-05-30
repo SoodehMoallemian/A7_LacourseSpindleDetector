@@ -41,6 +41,13 @@ function [detVect, detInfoTS, NREMClass, outputFile] = ...
 % Change Log 
 %       Fixed header, fixed nDetecInfo Karine Lacourse 2018-10-12
 %-------------------------------------------------------------------------
+% This script is modified by Soodeh Moallemian PhD., 
+% Brain Health Alliance, CMBN, Ritgers University
+% NOTE: the modifications are done based on the DREEM3 data.
+% s.moallemian@rutgers.edu
+% Date: 2024-05-30
+%-------------------------------------------------------------------------
+
     nDetecInfo  = 6; 
     detInfoTS   = zeros(length(timeSeries),nDetecInfo);
     
