@@ -72,7 +72,7 @@ function [detVect, detInfoTS, NREMClass, outputFile] = ...
     if any(validSampleVect)
         fprintf('spindle detection in process \n');
         % Take only samples without any artifact
-        validSampleVect = (validSampleVect & artifactDetectVector==0);
+        validSampleVect = (artifactDetectVector==0);
         nValidSec       = floor(sum(validSampleVect)/DEF_a7.standard_sampleRate)-DEF_a7.winLengthSec;
         nValidWindows   = floor( nValidSec/DEF_a7.WinStepSec ) +1 ;
         nWinInBSL       = floor( (DEF_a7.bslLengthSec-DEF_a7.winLengthSec) / DEF_a7.WinStepSec) +1;

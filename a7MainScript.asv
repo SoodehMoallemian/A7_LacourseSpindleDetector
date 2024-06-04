@@ -70,7 +70,7 @@ function SM_detectSpindles(sub_id, source_path,dep_path)
 
 %% a7 inits
 % A7 features and path init
-addpath(genpath(dep_path))
+
 sub_fold = fullfile(source_path,sub_id);
 cd(sub_fold)
 
@@ -89,8 +89,6 @@ else
 end
 
  % Path
- %subject_info
-    DEF_a7.sub_id = sub_id;
     % Define inputs directory
     DEF_a7.inputPath            = sub_fold;                % input path directory
     % Define inputs files in the input directory
@@ -114,7 +112,7 @@ end
     % Note that the stage units must match what is found in the
     % sleepStaging input file (sleepStaging.mat) 
     % (ie use '2', or 'N2' if 2 or N2 is used in the input sleep staging etc.)
-    DEF_a7.bslSleepStaging = {'N2'}; % or {'N2','N3'}
+    DEF_a7.bslSleepStaging = {'N2','N3'}; % or {'N2'}
     
     % DEF_a7.inContOn=0 (off): the context classifier is by passed 
     % DEF_a7.inContOn=1 (on): the context classifier is run and all the
@@ -209,6 +207,8 @@ end
     cd(SpindleFolder)
     save('DEF_a7.mat','DEF_a7')
 
+    % add libraries to path
+    addpath(genpath(dep_path));
     
 %% Script
 fprintf('Data is loading...\n');
