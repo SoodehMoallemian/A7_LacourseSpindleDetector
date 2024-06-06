@@ -79,15 +79,16 @@ SpindleFolder = fullfile(sub_fold,'Spindles');
 %check if there exist the spindle folder
 %NOTE! this part deletes the old spindles if htey exist
 
-if ~exist("SpindleFolder") %#ok<EXIST>
-    mkdir(sub_fold, 'Spindles');
-else
+if exist(SpindleFolder,"dir") %#ok<EXIST>
     OldFiles = spm_select('FPListRec',SpindleFolder,'.*');
     for OldFile_i = 1:size(OldFiles,1)
         delete(OldFiles(OldFile_i,:))
     end
+else
+     mkdir(sub_fold, 'Spindles')
+   
 end
-
+eeglab
  % Path
  %subject_info
     DEF_a7.sub_id = sub_id;
@@ -149,7 +150,8 @@ end
 % Context Classifier definition (Slow ratio)   
     % Slow ratio filter
     DEF_a7.lowFreqLow   = 0.5; % frequency band of delta + theta
-    DEF_a7.lowFreqHigh  = 8.0;   % frequency band of delta + theta
+    DEF_a7.lowFreqHigh  = 7.5;   % frequency band of delta + theta
+% we can change theta: 7.5 (EF_a7.lowFreqHigh  = 8)
     DEF_a7.highFreqLow  = 16.0;  % frequency band of beta
     DEF_a7.highFreqHigh = 30.0;  % frequency band of beta.
     % Detection In Context 
@@ -218,7 +220,8 @@ fprintf('Data is loading...\n');
 %--------------------------------------------------------------------------
 % Load the eeg timeseries c3 filtered 0-30 Hz 
     EEG = pop_loadset(fullfile(DEF_a7.inputPath, DEF_a7.EEGvector));
-    eeg_C3A2 = EEG.data(:,(1:end-2)); % by-sample   EEG.data(:,(1:end-2))
+    eeg_C3A2 = EEG.data
+    % eeg_C3A2 = EEG.data(:,(1:end-2)); % by-sample   EEG.data(:,(1:end-2))
     % eeg_C3A2 = eeg_C3A2.dataVector;
     
 %--------------------------------------------------------------------------
@@ -252,9 +255,15 @@ fprintf('Data is loading...\n');
             [detVect, detInfoTS, NREMClass, outputFile] = ...
                 a7SpindleDetection(elect_TimeSeries, sleepStageVect, ...
                 artifactVect, DEF_a7);
-        else
-            % error, check input vector
-            error('input vectors should be same size, check input vectors');
+        elseif ~isequal(length(eeg_C3A2),length(sleepStageVect))
+            n = size(eeg_C3A2,2); m = size(sleepStageVect',2);
+            sample_diff = n-m;
+            if sample_diff > 2 | sample_diff < 0
+                error('input vectors should be same size, check input vectors');
+            elseif sample_diff<=2
+                last_stage = sleepStageVect{end};
+                sleepStageVect(end+1:end+sample_diff) = repmat({last_stage}, 1, sample_diff);
+            end
         end
         save_a7out(DEF_a7, detInfoTS,detVect, NREMClass,outputFile,time,elect_name)
     end
