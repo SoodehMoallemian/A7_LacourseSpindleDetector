@@ -220,7 +220,7 @@ fprintf('Data is loading...\n');
 %--------------------------------------------------------------------------
 % Load the eeg timeseries c3 filtered 0-30 Hz 
     EEG = pop_loadset(fullfile(DEF_a7.inputPath, DEF_a7.EEGvector));
-    eeg_C3A2 = EEG.data
+    eeg_C3A2 = EEG.data;
     % eeg_C3A2 = EEG.data(:,(1:end-2)); % by-sample   EEG.data(:,(1:end-2))
     % eeg_C3A2 = eeg_C3A2.dataVector;
     
@@ -258,11 +258,14 @@ fprintf('Data is loading...\n');
         elseif ~isequal(length(eeg_C3A2),length(sleepStageVect))
             n = size(eeg_C3A2,2); m = size(sleepStageVect',2);
             sample_diff = n-m;
-            if sample_diff > 2 | sample_diff < 0
+            if sample_diff > 2 || sample_diff < 0
                 error('input vectors should be same size, check input vectors');
             elseif sample_diff<=2
                 last_stage = sleepStageVect{end};
                 sleepStageVect(end+1:end+sample_diff) = repmat({last_stage}, 1, sample_diff);
+                [detVect, detInfoTS, NREMClass, outputFile] = ...
+                a7SpindleDetection(elect_TimeSeries, sleepStageVect, ...
+                artifactVect, DEF_a7);
             end
         end
         save_a7out(DEF_a7, detInfoTS,detVect, NREMClass,outputFile,time,elect_name)

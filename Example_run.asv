@@ -1,0 +1,22 @@
+clc
+clear all
+sub_id = 'COV053'; 
+source_path = fullfile('D:\Studies\01_DREEM3\02_RawData'); 
+dep_path = fullfile('D:\Git\A7_LacourseSpindleDetector\lib');
+cd 'D:\Git\A7_LacourseSpindleDetector'
+SM_detectSpindles(sub_id, source_path,dep_path)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+clc
+clear all
+sub_id = 'COV053'; 
+prompt = 'what is the session number:'
+session_num = strcat('ses0',input(prompt,''))
+source_path = fullfile('D:\Studies\01_DREEM3\02_RawData', sub_id); 
+dep_path = fullfile('D:\Git\A7_LacourseSpindleDetector\lib');
+cd 'D:\Git\A7_LacourseSpindleDetector'
+SM_detectSpindles(sub_id, source_path,dep_path)
